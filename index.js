@@ -13,14 +13,49 @@ function clickRecaptchaCheckbox() {
   cb.click();
 }
 
-function getRecaptchaChallengeWords() {
-  var cd = document.querySelectorAll('iframe')[1].contentDocument;
-  var strong = cd.querySelector('strong');
-  if(strong !== null) {
-    return strong.innerHTML;
+function getRecaptchaChallengeWords(cb) {
+  var words = page.evaluate(function() {
+    var cd = document.querySelectorAll('iframe')[1].contentDocument;
+    var strong = cd.querySelector('strong');
+    if(strong !== null) {
+      return strong.innerHTML;
+    } else {
+      return null;
+    }
+  });
+
+  console.log('words is null ', words === null);
+  console.log('words is undefined ', words === undefined);
+  console.log('words is empty string ', words === '');
+  page.render(Math.floor(Date.now() / 1000) + '.png');
+  if(words !== null && words !== '') {
+    cb(words);
   } else {
-    return null;
+    console.log('They caught us!');
+    phantom.exit();
   }
+}
+
+function getDifferentCaptcha() {
+  page.evaluate(function() {
+    var cd = document.querySelectorAll('iframe')[1].contentDocument;
+    cd.getElementById('recaptcha-reload-button').click();
+  });
+}
+
+function hideElements() {
+  page.evaluate(function() {
+    document.getElementsByClassName('sample-form')[0].remove();
+    //var cd = document.querySelectorAll('iframe')[1].contentDocument;
+  });
+}
+
+function haveWords(challengeWords) {
+  console.log('challengeWords: ', challengeWords);
+  hideElements();
+  console.log('rendering image');
+  page.render('after.png');
+  phantom.exit();
 }
 
 page.open(url, function (status) {
@@ -31,11 +66,7 @@ page.open(url, function (status) {
     console.log('button clicked');
     // Wait for Google to decide we are a bot
     setTimeout(function() {
-      console.log('rendering image');
-      page.render('after.png');
-      const challengeWords = page.evaluate(getRecaptchaChallengeWords);
-      console.log('words: ', challengeWords);
-      phantom.exit();
+      getRecaptchaChallengeWords(haveWords);
     }, 4000);
     
   }, 1000);

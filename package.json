@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "phantomjs index.js --proxy=89.218.6.138:3128",
-    "classify": "node classify.js"
+    "start": "phantomjs index.js --proxy=197.85.136.7:3128",
+    "classify": "node classify.js",
+    "analyze": "node processing/analyze.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "phantomjs": "^2.1.7",
+    "png-js": "^0.1.1",
     "request": "^2.81.0"
   }
 }
