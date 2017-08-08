@@ -1,0 +1,17 @@
+{
+  "name": "recaptcha",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "phantomjs index.js --proxy=89.218.6.138:3128",
+    "classify": "node classify.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "phantomjs": "^2.1.7",
+    "request": "^2.81.0"
+  }
+}
